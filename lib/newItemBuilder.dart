@@ -11,7 +11,6 @@ class _NewItemBuilderState extends State<NewItemBuilder> {
   final GlobalKey<FormState> _formKey = GlobalKey();
 
   void _handleSubmit() {
-//final FormState form = _formKey.currentState;
     if (_formKey.currentState.validate()) {
       print('good. Now, save the form and do all the things required.');
     }
