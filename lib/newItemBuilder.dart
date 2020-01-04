@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'model/item.dart';
+
+var _numAddOns = 0;
 
 class NewItemBuilder extends StatefulWidget {
   @override
@@ -9,11 +12,14 @@ class NewItemBuilder extends StatefulWidget {
 
 class _NewItemBuilderState extends State<NewItemBuilder> {
   final GlobalKey<FormState> _formKey = GlobalKey();
-  var _numAddOns = 0;
+  Item newItem = Item();
 
-  void _handleSubmit() {
+  void _handleSubmit(BuildContext context) {
     if (_formKey.currentState.validate()) {
       print('good. Now, save the form and do all the things required.');
+      _formKey.currentState.save();
+      print(newItem.itemName);
+      Navigator.pop(context, newItem);
     }
   }
 
@@ -26,7 +32,7 @@ class _NewItemBuilderState extends State<NewItemBuilder> {
             IconButton(
                 icon: Icon(Icons.check),
                 onPressed: () {
-                  _handleSubmit();
+                  _handleSubmit(context);
                 }),
           ],
         ),
@@ -37,25 +43,19 @@ class _NewItemBuilderState extends State<NewItemBuilder> {
               key: _formKey,
               child: _getFormUi(),
             ),
-            Container(
-                child: RaisedButton(
-                  child: Text('Add customizable options'),
-                  onPressed: () => setState(() => _numAddOns++),
-                )
-            ),
           ],
         )
     );
   }
 
   Widget _getFormUi() {
-    List<Widget> _addOns = List.generate(
-        _numAddOns, (int i) => _ItemCustomizer());
     List<Widget> _widgetsToReturn = [
       _getNonCustomizableInputWidget('Name of item'),
       _getPriceInputWidget(),
     ];
 
+    List<Widget> _addOns = List.generate(
+        _numAddOns, (int i) => _ItemCustomizer());
     _widgetsToReturn.addAll(_addOns);
 
     return Column(
@@ -81,10 +81,11 @@ class _NewItemBuilderState extends State<NewItemBuilder> {
                     return 'This field is required.';
                   }
                   if (double.tryParse(value) == null) {
-                    return 'Invalid input';
+                    return 'Please enter a valid numeric value.';
                   }
                   return null;
                 },
+                onSaved: (val) => newItem.basePrice = double.parse(val)
               ),
             )),
       ],
@@ -109,6 +110,7 @@ class _NewItemBuilderState extends State<NewItemBuilder> {
                   }
                   return null;
                 },
+                  onSaved: (val) => newItem.itemName = val,
               ),
             ))
       ],
@@ -135,7 +137,7 @@ class _ItemCustomizerState extends State<_ItemCustomizer> {
     return Row(
       children: <Widget>[
         Container(
-          //child: Text(fieldName),
+          child: Text('Add-on'),
           padding: EdgeInsets.only(left: 10.0, right: 10.0),
         ),
         Expanded(
@@ -149,7 +151,7 @@ class _ItemCustomizerState extends State<_ItemCustomizer> {
                   return null;
                 },
               ),
-            ))
+            )),
       ],
     );
   }
