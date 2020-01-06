@@ -1,3 +1,4 @@
+import 'package:customizable_pos_system/model/item.dart';
 import 'package:flutter/material.dart';
 import 'newItemBuilder.dart';
 
@@ -18,14 +19,15 @@ class MyApp extends StatelessWidget {
             IconButton(
                 icon: Icon(Icons.add),
                 onPressed: () {
-                  Navigator.push(
-                    _scaffoldKey.currentContext,
-                    MaterialPageRoute(builder: (context) => NewItemBuilder()),
-                  );
-                  _scaffoldKey.currentState.showSnackBar(
-                    SnackBar(
-                      content: Text('hello!'),
-                    ));
+                  _addNewItem();
+//                  Navigator.push(
+//                    _scaffoldKey.currentContext,
+//                    MaterialPageRoute(builder: (context) => NewItemBuilder()),
+//                  );
+//                  _scaffoldKey.currentState.showSnackBar(
+//                    SnackBar(
+//                      content: Text('hello!'),
+//                    ));
                 }
             )
           ],
@@ -33,20 +35,28 @@ class MyApp extends StatelessWidget {
       ),
     );
   }
-}
 
-class ViewItemsList extends StatefulWidget{
-
-  @override
-  State createState() {
-  }
-
-}
-
-class _ItemsListState extends State<ViewItemsList> {
-
-  @override
-  Widget build(BuildContext context) {
-
+  void _addNewItem() async {
+    final Item result = await Navigator.push(
+        _scaffoldKey.currentContext,
+        MaterialPageRoute(builder: (context) => NewItemBuilder()),
+    );
+    _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(result.itemName)));
   }
 }
+
+//class ViewItemsList extends StatefulWidget{
+//
+//  @override
+//  State createState() {
+//  }
+//
+//}
+//
+//class _ItemsListState extends State<ViewItemsList> {
+//
+//  @override
+//  Widget build(BuildContext context) {
+//
+//  }
+//}
