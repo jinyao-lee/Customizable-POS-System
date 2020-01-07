@@ -1,3 +1,4 @@
+import 'package:customizable_pos_system/utils/sqlUtil.dart';
 import 'package:flutter/material.dart';
 import 'model/item.dart';
 
@@ -15,6 +16,7 @@ class _NewItemBuilderState extends State<NewItemBuilder> {
   Item newItem = Item();
 
   void _handleSubmit(BuildContext context) {
+    SqlUtil.testSql();
     if (_formKey.currentState.validate()) {
       print('good. Now, save the form and do all the things required.');
       _formKey.currentState.save();
