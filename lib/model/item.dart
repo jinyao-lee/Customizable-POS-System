@@ -9,6 +9,11 @@ class Item {
     addOns = List();
   }
 
+  Item.withPresetValues(String itemName, double basePrice) {
+    this.itemName = itemName;
+    this.basePrice = basePrice;
+  }
+
   Map<String, dynamic> toMap() {
     return {
       'item_name' : itemName,

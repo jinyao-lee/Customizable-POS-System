@@ -1,3 +1,4 @@
+import 'package:customizable_pos_system/itemManager.dart';
 import 'package:customizable_pos_system/model/item.dart';
 import 'package:flutter/material.dart';
 import 'newItemBuilder.dart';
@@ -20,18 +21,24 @@ class MyApp extends StatelessWidget {
                 icon: Icon(Icons.add),
                 onPressed: () {
                   _addNewItem();
-//                  Navigator.push(
-//                    _scaffoldKey.currentContext,
-//                    MaterialPageRoute(builder: (context) => NewItemBuilder()),
-//                  );
-//                  _scaffoldKey.currentState.showSnackBar(
-//                    SnackBar(
-//                      content: Text('hello!'),
-//                    ));
                 }
             )
           ],
         ),
+        body: FutureBuilder<List<Item>>(
+          future: ItemManager.getItemsList(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return Center(child: CircularProgressIndicator());
+            }
+
+            return ListView(
+              children: snapshot.data.map((item) => ListTile(
+                title: Text(item.itemName),
+              )).toList(),
+            );
+          },
+        )
       ),
     );
   }
@@ -41,22 +48,22 @@ class MyApp extends StatelessWidget {
         _scaffoldKey.currentContext,
         MaterialPageRoute(builder: (context) => NewItemBuilder()),
     );
-    _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(result.itemName)));
+    _scaffoldKey.currentState.showSnackBar(
+        SnackBar(content: Text('Added: ' + result.itemName)));
   }
 }
 
-//class ViewItemsList extends StatefulWidget{
-//
-//  @override
-//  State createState() {
-//  }
-//
-//}
-//
-//class _ItemsListState extends State<ViewItemsList> {
-//
-//  @override
-//  Widget build(BuildContext context) {
-//
-//  }
-//}
+class ItemDisplay extends StatefulWidget {
+
+  @override
+  State createState() => _ItemDisplayState();
+}
+
+class _ItemDisplayState extends State<ItemDisplay> {
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return null;
+  }
+}

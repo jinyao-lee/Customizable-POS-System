@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:customizable_pos_system/model/item.dart';
 import 'package:path/path.dart';
@@ -24,16 +25,28 @@ class SqlUtil {
   static Future<Database> openSqlTableConnection() async {
     final Future<Database> database = openDatabase(
         join(await getDatabasesPath(), 'menu_item.db'),
-        onOpen: (Database db) {
-          db.execute("DROP TABLE IF EXISTS Items;");
+        onCreate: (Database db, int version) {
+          //db.execute("DROP TABLE IF EXISTS Items;");
           db.execute(_SQL_CREATE_TABLE_ITEM);
-          db.execute("DROP TABLE IF EXISTS Addons;");
+          //db.execute("DROP TABLE IF EXISTS Addons;");
           db.execute(_SQL_CREATE_TABLE_ADDONS);
-          db.execute("DROP TABLE IF EXISTS Options;");
+          //db.execute("DROP TABLE IF EXISTS Options;");
           db.execute(_SQL_CREATE_TABLE_ADDON_OPTIONS);
         }, version: 1);
+    database.then((db) {
+      log('DB opened at: ' + db.path);
+    });
     return database;
   }
+
+  /// Returns the current list of Items from the SQL DB
+  static Future<List<Map<String, dynamic>>> getItems() async {
+    Database db = await openSqlTableConnection();
+    var res = await db.query('Items');
+    print(res);
+    return db.query('Items');
+  }
+
 
   /// To-remove. Just a testing function.
   static void testSql() async {
@@ -41,7 +54,8 @@ class SqlUtil {
     itemToTest.basePrice = 1.23;
     itemToTest.itemName = 'test me';
     Database db = await openSqlTableConnection();
-    print(db.path);
+    print('DB opened. Debug path: ' + db.path);
+    log('DB opened. Debug path: ' + db.path);
     await db.delete('Items');
     await db.insert('Items', itemToTest.toMap());
     await db.execute("INSERT INTO Items VALUES ('meme', 123)");

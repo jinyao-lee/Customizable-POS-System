@@ -18,9 +18,6 @@ class _NewItemBuilderState extends State<NewItemBuilder> {
   void _handleSubmit(BuildContext context) {
     SqlUtil.testSql();
     if (_formKey.currentState.validate()) {
-      print('good. Now, save the form and do all the things required.');
-      _formKey.currentState.save();
-      print(newItem.itemName);
       Navigator.pop(context, newItem);
     }
   }
